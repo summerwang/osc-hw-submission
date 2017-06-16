@@ -4,7 +4,7 @@ It is used by professor to
 1. Create designated directory where students submit their homework
 2. Generate `submit` for students to submit homework to OSC
 
-## Installation (by OSC Staff)
+## Configuration (by OSC Staff)
 
 Run `create_submit_forPI.sh` to create `/fs/scratch/xwang/bin/submit_prepare` and `/fs/scratch/xwang/scripts/submit.C` as:
 
