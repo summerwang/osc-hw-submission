@@ -48,7 +48,7 @@ For example: 2:30 PM 10/21/2014
 After running this command, run:
 
 ```sh
-$ chmod +R 700 [DIRECTORY]
+$ chmod 700 [DIRECTORY]
 ``` 
 Where `DIRECTORY` is the assignment folder to be closed off Finally enter [ctrl+D] to submit this command.
 
