@@ -13,8 +13,8 @@ PROF=`finger $USER |grep Name | awk '{$1=$2=$3="";print}'`
 EMAIL=`finger $USER |grep Mail | awk '{print $4}'`
 # Default size limit of one homework submitted by each student, 1000 MB
 SIZE_DEFAULT=1000
-#Default path where submission directory is created. For now, use home directory. 
-PATH_DEFAULT=$HOME
+#Default path where submission directory is created. For now, use the current directory where the script runs. 
+PATH_DEFAULT=`pwd`
 
 
 # Functions
@@ -23,8 +23,8 @@ PATH_DEFAULT=$HOME
 # File permissions of this directory is set at 1731
 create_directory()
 {
-DESTINATION="$path/Submissions/HW$assignment"
-SUBMISSION_FOLDER="$path/Submissions" 
+DESTINATION="$path/$course/Submissions/$assignment"
+SUBMISSION_FOLDER="$path/$course/Submissions" 
 if [ -d "$DESTINATION" ]; then
  echo "****************************************************************************************"
  echo "$DESTINATION exists. Please provide a different homework number or delete the current directory. Exit"
@@ -57,7 +57,7 @@ fi
 
 create_submit()
 {
-SUBMISSION_FOLDER="$path/Submissions"
+SUBMISSION_FOLDER="$path/$course/Submissions"
 
 cd $SUBMISSION_FOLDER
 
@@ -84,7 +84,7 @@ cat << EOF >submit.sh
 
 submit_homework()
 {
-DESTINATION="$path/Submissions/HW\$assignment_s"
+DESTINATION="$path/$course/Submissions/\$assignment_s"
 CLONE="\$DESTINATION/\$USER"
 EMAIL_S="\$(finger \$USER |grep Mail | awk '{print \$4}')"
 Permission="\$(ls -ld \$DESTINATION | awk '{print \$1}')"
@@ -131,25 +131,42 @@ echo "Before you run this script, please create one directory which includes all
 echo "The previous submission of the same assignment from you will be replaced by the new submission"
 echo "**********************************************************************************************"
 
-echo "Enter the number of Homework. Integer only."\
-     "For example, for Homework 1, enter 1 and press [ENTER]"
-read assignment_s
-re='^[0-9]+$'
-while [[ !(\$assignment_s =~ \$re) ]]  
-do
- echo "Not a valid value. Enter the number of Homework. For example, for Homework 1, enter 1 and press [ENTER]"
- read assignment_s
+
+echo "Enter the name of assignment and press [ENTER]"
+read -p ">>>" assignment_input
+assignment_s="\$(echo \$assignment_input | tr [A-Z] [a-z])"
+DESTINATION="$path/$course/Submissions/\$assignment_s"
+CLONE="\$DESTINATION/\$USER"
+while [[ !(-d "$DESTINATION") ]]
+ do
+  echo "****************************************************************************************"
+  echo "This assignment submission directory does not exist. Please submit a different assignment name or check with your professor." 
+  echo "Enter \"quit\" if you want to quit"
+  read -p ">>>" assignment_input
+  if [[ \$assignment_input == "quit" ]]; then
+     exit
+  fi
+  assignment_s = `echo \$assignment_input | tr [A-Z] [a-z]`
+  DESTINATION="$path/$course/Submissions/\$assignment_s"
 done
 
-if [[ !(-d "$SUBMISSION_FOLDER/HW\$assignment_s") ]]; then
-  echo " "
-  echo "Submission directory of homework \$assignment_s does not exist. Please submit a different homework or check with your professor"
+
+if [[ -d "\$CLONE" ]]; then
+  echo "You have submitted your assignment \$assignment_s before."
+  echo "Enter \"quit\" if you want to quit."
+  echo "Otherwise enter the absolute path of the directory which includes all the files of your assignment \$assignment_s."
+  echo "The previous submission of your assignment \$assignment_s will be replaced by the new submission."
+else 
+ echo "Enter the absolute path of the directory which includes all the files of your assignment \$assignment_s and press [ENTER]"
+fi
+
+
+#echo "Enter the absolute path of the directory which includes all the files of your assignment \$assignment_s and press [ENTER]"
+read -p ">>>" submit_path
+if [[ \$submit_path == "quit" ]]; then
   exit
 fi
 
-echo " "
-echo "Enter the absolute path of the directory which includes all the files of your assignment \$assignment_s and press [ENTER]"
-read submit_path
 if [ -d "\$submit_path" ]; then
 submission_size="\$(du -m -s \$submit_path | awk '{print \$1}')"
  if [[ \$submission_size -gt $size ]]; then
@@ -165,17 +182,17 @@ submit_homework \$assignment_s \$submit_path
 EOF
 fi
 chmod 750 submit.sh
-cp /fs/scratch/xwang/scripts/submit.C $path/Submissions
-newline=system\(\"$path/Submissions/submit.sh\"\)\;
+cp /fs/scratch/xwang/scripts/submit.C $path/$course/Submissions
+newline=system\(\"$path/$course/Submissions/submit.sh\"\)\;
 sed -i "/system/c $newline" submit.C
 gcc -o submit submit.C
 chmod 750 submit
 rm submit.C
-mv submit $path
+mv submit $path/$course
 echo "submit has been generated successfully"
-echo "Your students can submit homework using the command: $path/submit"
+echo "Your students can submit homework using the command: $path/$course/submit"
 echo "Note:"
-echo "Do not share $path/Submissions/submit.sh with your students!"
+echo "Do not share $path/$course/Submissions/submit.sh with your students!"
 }
 
 
@@ -186,9 +203,9 @@ echo "Hello, "$PROF".  This script will
 2. Create a designated directory where students submit their homework"
 echo " "
 
-echo "Enter the absolute path where the submission direcotry will be created" \
-     "The submission direcotry will be created within $PATH_DEFAULT if you simply press [ENTER]"
-read path
+echo "Enter the absolute path where the submission direcotry will be created. 
+The submission direcotry will be created within the current directory if you simply press [ENTER]"
+read -p ">>>" path
 if [[ -z "$path" ]]; then
  path=$PATH_DEFAULT
 fi
@@ -198,40 +215,56 @@ if [[ !(-d "$path") ]]; then
 fi
 echo " "
 
-echo "Enter the number of Homework. Integer only."\
-     "For example, for Homework 1, enter 1 and press [ENTER]"
-read assignment
-re='^[0-9]+$'
-while [[ !($assignment =~ $re) ]]  
-do 
- echo "Not a valid value. Enter the number of Homework"\
-      "For example, for Homework 1, enter 1 and press [ENTER]"
- read assignment
-done
-echo " "
+echo "Enter the course number."
+read -p ">>>" course_input
+if [[ -z "$course_input" ]]; then
+ echo "Course number is empty. Exit"
+ exit
+fi
+course=`echo $course_input | tr [A-Z] [a-z]`
 
-echo "Enter the size limit of one homework submitted by each student, in MB (megabyte). Integer only."\
-     "The size limit of one homework submitted by each student is $SIZE_DEFAULT MB if you simply press [ENTER]"
-read size
+echo "Enter the name of assignment and press [ENTER]"
+read -p ">>>" assignment_input
+assignment=`echo $assignment_input | tr [A-Z] [a-z]`
+DESTINATION="$path/$course/Submissions/$assignment"
+while [ -d "$DESTINATION" ]
+ do
+  echo "****************************************************************************************"
+  echo "This assignment submission directory exists. Please provide a different assignment name or delete the current directory." 
+  echo "Enter \"quit\" if you want to quit"
+  read -p ">>>" assignment_input
+  if [[ $assignment_input == "quit" ]]; then
+     exit
+  fi
+  assignment = `echo $assignment_input | tr [A-Z] [a-z]`
+  DESTINATION="$path/$course/Submissions/$assignment"
+done
+
+
+echo "Enter the size limit of one assignment submitted by each student, in MB (megabyte). Integer only.
+The size limit of one assignment submitted by each student is $SIZE_DEFAULT MB if you simply press [ENTER]"
+read -p ">>>" size
 if [[ -z "$size" ]]; then
  size=$SIZE_DEFAULT
 fi
+re='^[0-9]+$'
 while [[ !($size =~ $re) ]]  
  do
-  echo "Not a valid value. Enter the size limit, in MB (megabyte)"\
-       "For example, if you want to limit the size to 40MB, enter 40 and press [ENTER]"
-  read size
+  echo "Not a valid value. Enter the size limit, in MB (megabyte)
+        For example, if you want to limit the size to 40MB, enter 40 and press [ENTER]" 
+ read -p ">>>" size
  done
 echo ""
 
 echo "The student will receive an email notification after he/she submits the homework. Do you want to get email notification, too [y/n]?"
-read reply_email
+read -p ">>>" reply_email
 if [[ $reply_email = 'y' ]]; then
  echo "An email notification will be sent to both the student and your email ($EMAIL) after his/her homework has been submitted"
 else 
+ reply_email='n'
  echo "An email notification will be sent to the student after his/her homework has been submitted"
 fi
 echo ""
 
 create_directory $path $assignment
-create_submit $path $assignment $size $reply_email
+create_submit $path $course $assignment $size $reply_email
