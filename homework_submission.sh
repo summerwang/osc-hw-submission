@@ -134,7 +134,7 @@ echo "Before you run this script, please create one directory which includes all
 echo "The previous submission of the same assignment from you will be replaced by the new submission"
 echo "**********************************************************************************************"
 
-
+PATH_SDEFAULT="\$(pwd)"
 echo "Enter the name of assignment and press [ENTER]"
 read -p ">>>" assignment_input
 assignment_s="\$(echo \$assignment_input | tr [A-Z] [a-z])"
@@ -163,9 +163,13 @@ else
  echo "Enter the absolute path of the directory which includes all the files of your assignment \$assignment_s and press [ENTER]"
 fi
 
+echo "You will submit the current directory if you simply press [ENTER]"
+
 read -p ">>>" submit_path
 if [[ \$submit_path == "quit" ]]; then
   exit
+elif [[ -z "\$submit_path" ]]; then
+ submit_path=\$PATH_SDEFAULT
 fi
 
 if [ -d "\$submit_path" ]; then
@@ -183,7 +187,7 @@ submit_homework \$assignment_s \$submit_path
 EOF
 fi
 chmod 750 submit.sh
-cp /fs/scratch/xwang/scripts/submit.C $path/$course/Submissions
+cp /fs/scratch/xwang/bin/submit.C $path/$course/Submissions
 newline=system\(\"$path/$course/Submissions/submit.sh\"\)\;
 sed -i "/system/c $newline" submit.C
 gcc -o submit submit.C
