@@ -1,10 +1,10 @@
 #!/bin/bash
 ################################################################################
 # Author:       Summer Wang <xwang@osc.edu>
-# Date:         06/14/2017
+# Date:         08/09/2017
 
 # This script is used by PI of classroom project to 
-# 1. Generate the submit.sh code which is used by students to submit homework
+# 1. Generate "submit" which is used by students to submit homework
 # 2. Create a designated directory where students submit their homework 
 ###############################################################################
 
@@ -24,15 +24,17 @@ PATH_DEFAULT=`pwd`
 create_directory()
 {
 DESTINATION="$path/$course/Submissions/$assignment"
-SUBMISSION_FOLDER="$path/$course/Submissions" 
+SUBMISSION_FOLDER="$path/$course/Submissions"
+COURSE_FOLDER="$path/$course" 
 if [ -d "$DESTINATION" ]; then
  echo "****************************************************************************************"
- echo "$DESTINATION exists. Please provide a different homework number or delete the current directory. Exit"
+ echo "$DESTINATION exists. Please provide a different assignment name or delete the current directory. Exit"
  echo ""
  exit
 else
  mkdir -p $DESTINATION
    if [ -d "$DESTINATION" ]; then
+     chmod 1711 $COURSE_FOLDER
      chmod 1711 $SUBMISSION_FOLDER 
      chmod 1731 $DESTINATION
      while [[ $SUBMISSION_FOLDER != "/" ]] 
@@ -44,7 +46,8 @@ else
        SUBMISSION_FOLDER=$(dirname $SUBMISSION_FOLDER)
      done
      echo "****************************************************************************************"
-     echo "$DESTINATION is created successfully. Your students can submit homework to $DESTINATION"
+     echo "$DESTINATION is created successfully."
+     echo " Your students can submit assignment to $DESTINATION"
      echo " "
    else 
      echo "****************************************************************************************"
@@ -77,10 +80,10 @@ if [[ (-f "submit.sh") && ($reply_delete = 'n') ]]; then
  exit
 else  
 cat << EOF >submit.sh
-#Submits a student's homework into a designated submission directory
+#Submits a student's assignment into a designated submission directory
 #Every use by the student deletes any previous submissions
-#Use: $SUBMISSION_FOLDER/submit
-#The size limit of one homework submitted by each student is $size MB
+#Use: $path/$course/submit
+#The size limit of one assignment submitted by each student is $size MB
 
 submit_homework()
 {
@@ -103,21 +106,21 @@ if [[ \$Permission = 'drwx-wx--t' ]]; then
  chmod -R 700 \$submit_path
  Submit_time=\$(date)
   if [ -d "\$CLONE" ]; then 
-   echo "Your homework \$assignment_s is submitted succesfully. Thank you!"
-   echo "\$USER submitted homework \$assignment_s in \$submit_path at \$Submit_time" >>\$DESTINATION/submit_log_\$USER.txt
+   echo "Your assignment \$assignment_s is submitted succesfully. Thank you!"
+   echo "\$USER submitted assignment \$assignment_s in \$submit_path at \$Submit_time" >>\$DESTINATION/submit_log_\$USER.txt
     if [[ $reply_email = 'y' ]]; then
-       echo "\$USER submitted homework \$assignment_s in \$submit_path at \$Submit_time" | mail -s "HW\$assignment_s from \$USER is submitted succesfully" -c $EMAIL \$EMAIL_S
+       echo "\$USER submitted assignment \$assignment_s in \$submit_path at \$Submit_time" | mail -s "\$assignment_s from \$USER is submitted succesfully" -c $EMAIL \$EMAIL_S
     else
-       echo "\$USER submitted homework \$assignment_s in \$submit_path at \$Submit_time" | mail -s "HW\$assignment_s from \$USER is submitted succesfully" \$EMAIL_S
+       echo "\$USER submitted assignment \$assignment_s in \$submit_path at \$Submit_time" | mail -s "\$assignment_s from \$USER is submitted succesfully" \$EMAIL_S
     fi
   else
-   echo "Your homework \$assignment_s is NOT submitted. Please check with your professor"
-   echo "Your homework \$assignment_s is NOT submitted at \$Submit_time" >>\$DESTINATION/submit_log_\$USER.txt
+   echo "Your assignment \$assignment_s is NOT submitted. Please check with your professor"
+   echo "Your assignment \$assignment_s is NOT submitted at \$Submit_time" >>\$DESTINATION/submit_log_\$USER.txt
   fi
  cp \$DESTINATION/submit_log_\$USER.txt \$submit_path
  chmod u-w \$DESTINATION/submit_log_\$USER.txt  
 else
-  echo "You may pass the deadline and can't submit your homework \$assignment_s. Please check with your professor"
+  echo "You may pass the deadline and can't submit your assignment \$assignment_s. Please check with your professor"
   exit
 fi   
 }
@@ -125,7 +128,7 @@ fi
 
 ### Main script starts here
 echo "*********************************************************************************************"
-echo "Hello. This script will submit your homework assigned by $PROF to OSC"
+echo "Hello. This script will submit your assignment assigned by $PROF to OSC"
 echo "Note:"
 echo "Before you run this script, please create one directory which includes all the files you want to submit"
 echo "The previous submission of the same assignment from you will be replaced by the new submission"
@@ -137,10 +140,10 @@ read -p ">>>" assignment_input
 assignment_s="\$(echo \$assignment_input | tr [A-Z] [a-z])"
 DESTINATION="$path/$course/Submissions/\$assignment_s"
 CLONE="\$DESTINATION/\$USER"
-while [[ !(-d "$DESTINATION") ]]
+while [[ !(-d "\$DESTINATION") ]]
  do
   echo "****************************************************************************************"
-  echo "This assignment submission directory does not exist. Please submit a different assignment name or check with your professor." 
+  echo "This assignment submission directory does not exist. Please submit a different assignment or check with your professor." 
   echo "Enter \"quit\" if you want to quit"
   read -p ">>>" assignment_input
   if [[ \$assignment_input == "quit" ]]; then
@@ -160,8 +163,6 @@ else
  echo "Enter the absolute path of the directory which includes all the files of your assignment \$assignment_s and press [ENTER]"
 fi
 
-
-#echo "Enter the absolute path of the directory which includes all the files of your assignment \$assignment_s and press [ENTER]"
 read -p ">>>" submit_path
 if [[ \$submit_path == "quit" ]]; then
   exit
@@ -191,16 +192,16 @@ rm submit.C
 mv submit $path/$course
 echo "submit has been generated successfully"
 echo "Your students can submit homework using the command: $path/$course/submit"
-echo "Note:"
-echo "Do not share $path/$course/Submissions/submit.sh with your students!"
+echo "!! Note:"
+echo "!! Do not share $path/$course/Submissions/submit.sh with your students!"
 }
 
 
 ### Main script starts here
 
 echo "Hello, "$PROF".  This script will
-1. Generate submit which is used by students to submit homework
-2. Create a designated directory where students submit their homework"
+1. Generate submit which is used by students to submit assignment
+2. Create a designated directory where students submit their assignment"
 echo " "
 
 echo "Enter the absolute path where the submission direcotry will be created. 
@@ -221,7 +222,7 @@ if [[ -z "$course_input" ]]; then
  echo "Course number is empty. Exit"
  exit
 fi
-course=`echo $course_input | tr [A-Z] [a-z]`
+course=`echo $course_input | tr [a-z] [A-Z]`
 
 echo "Enter the name of assignment and press [ENTER]"
 read -p ">>>" assignment_input
