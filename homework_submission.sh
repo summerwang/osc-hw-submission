@@ -149,8 +149,8 @@ while [[ !(-d "\$DESTINATION") ]]
   if [[ \$assignment_input == "quit" ]]; then
      exit
   fi
-  assignment_s = `echo \$assignment_input | tr [A-Z] [a-z]`
-  DESTINATION="$path/$course/Submissions/\$assignment_s"
+ assignment_s="\$(echo \$assignment_input | tr [A-Z] [a-z])" 
+ DESTINATION="$path/$course/Submissions/\$assignment_s"
 done
 
 
