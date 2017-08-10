@@ -56,7 +56,7 @@ Step 1: use `at` command to specify the deadline:
 at [TIME]
 ```
 
-Where TIME is formatted HH:MM AM/PM MM/DD/YY. For example: 
+where TIME is formatted HH:MM AM/PM MM/DD/YY. For example: 
 
 ```
 at 2:30 PM 10/21/2018
@@ -68,7 +68,9 @@ Step 2: after running this command, run:
 $ chmod 700 [DIRECTORY]
 ``` 
 
-Where `DIRECTORY` is the assignment folder to be closed off Finally enter [ctrl+D] to submit this command. Then the permission of `DIRECTORY` will be changed to **700** at 2:30PM, Oct 21, 2018. After that, student will get an error message when he/she tries to submit assignment to this directory.  
+where `DIRECTORY` is the assignment folder to be closed off.
+
+Step 3: finally enter [ctrl+D] to submit this command. Then the permission of `DIRECTORY` will be changed to **700** at 2:30PM, Oct 21, 2018. After that, student will get an error message when he/she tries to submit assignment to this directory.  
 
 ## Usage for Students
 
