@@ -50,7 +50,7 @@ Follow the instructions. It will create designated directory where students subm
 
 The PI can also enforce deadline by simply changing the permission of the submission directory or renaming the submission directory at the deadline. One way is to use `at` command following the steps below:
 
-Step 1: use `at' command to specify the deadline: 
+Step 1: use `at` command to specify the deadline: 
 
 ```
 at [TIME]
