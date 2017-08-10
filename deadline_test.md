@@ -13,13 +13,15 @@ login as `prof` at 1:21PM August 10, 2017 on Owens
 3. hw1
 4. [Enter]
 5. [Enter]
-6. at 1:30PM 8/10/2017
-at> chmod 700 /users/PZS0701/osc1028/CSE01/Submissions/hw1
+6. 
 
+```
+at 1:30PM 8/10/2017
+at> chmod 700 /users/PZS0701/osc1028/CSE01/Submissions/hw1
 at> <EOT>
 
 job 1 at Thu Aug 10 13:30:00 2017
-
+```
 ## Test: before deadline 
 login as `st` at 1:25PM August 10, 2017
 ### Inputs:
@@ -30,17 +32,15 @@ login as `st` at 1:25PM August 10, 2017
 Your assignment hw1 is submitted succesfully. Thank you!
 
 ### Results seen by professor:
+
+```
 drwx-wx--t 2 osc1028 PZS0701 4096 Aug 10 13:21 hw1
-
 -bash-4.2$ cd hw1
-
 -bash-4.2$ ll
-
 total 8
-
 drwxrwx--- 2 osc1029 PZS0701 4096 Aug 10 13:25 osc1029
-
 -r-xr-x--- 1 osc1029 PZS0701   99 Aug 10 13:25 submit_log_osc1029.txt
+```
 
 ## Test: deadline passed
 
@@ -53,18 +53,15 @@ login as `st` at 1:32PM August 10, 2017
 You may pass the deadline and cant submit your assignment hw1. Please check with your professor
 
 ### Results seen by professor:
+
+```
 drwx------ 3 osc1028 PZS0701 4096 Aug 10 13:25 hw1
-
 -bash-4.2$ cd hw1
-
 -bash-4.2$ ll
-
 total 8
-
 drwxrwx--- 2 osc1029 PZS0701 4096 Aug 10 13:25 osc1029
-
 -r-xr-x--- 1 osc1029 PZS0701   99 Aug 10 13:25 submit_log_osc1029.txt
-
+```
 
 
 
