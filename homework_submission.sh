@@ -151,6 +151,7 @@ while [[ !(-d "\$DESTINATION") ]]
   fi
  assignment_s="\$(echo \$assignment_input | tr [A-Z] [a-z])" 
  DESTINATION="$path/$course/Submissions/\$assignment_s"
+ CLONE="\$DESTINATION/\$USER"
 done
 
 
