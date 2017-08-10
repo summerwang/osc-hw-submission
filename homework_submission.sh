@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################################################################
 # Author:       Summer Wang <xwang@osc.edu>
-# Date:         08/09/2017
+# Date:         08/10/2017
 
 # This script is used by PI of classroom project to 
 # 1. Generate "submit" which is used by students to submit homework
@@ -47,7 +47,7 @@ else
      done
      echo "****************************************************************************************"
      echo "$DESTINATION is created successfully."
-     echo " Your students can submit assignment to $DESTINATION"
+     echo "Your students can submit assignment to $DESTINATION"
      echo " "
    else 
      echo "****************************************************************************************"
@@ -132,7 +132,7 @@ echo "Hello. This script will submit your assignment assigned by $PROF to OSC"
 echo "Note:"
 echo "Before you run this script, please create one directory which includes all the files you want to submit"
 echo "The previous submission of the same assignment from you will be replaced by the new submission"
-echo "**********************************************************************************************"
+echo ""
 
 PATH_SDEFAULT="\$(pwd)"
 echo "Enter the name of assignment and press [ENTER]"
@@ -196,13 +196,13 @@ rm submit.C
 mv submit $path/$course
 echo "submit has been generated successfully"
 echo "Your students can submit homework using the command: $path/$course/submit"
-echo "!! Note:"
-echo "!! Do not share $path/$course/Submissions/submit.sh with your students!"
+echo "** Note:"
+echo "** Do not share $path/$course/Submissions/submit.sh with your students!"
 }
 
 
 ### Main script starts here
-
+echo "********************************************************************"
 echo "Hello, "$PROF".  This script will
 1. Generate submit which is used by students to submit assignment
 2. Create a designated directory where students submit their assignment"
