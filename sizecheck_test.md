@@ -4,7 +4,7 @@ Create three OSC user accounts with the following setups:
 1. Two user accounts under the same group (the same classroom project account) but belong to different contact IDs with different email address. For example: `prof` as professor, `st` as student
 2. The third user account belongs to different group of `prof` and `st`. For example: `other` as another user who should not have permission to submit homework to `prof`
 
-#login as `prof`
+# login as `prof`
 ## Inputs:
 1. [Enter]
 2. cse01
@@ -12,7 +12,7 @@ Create three OSC user accounts with the following setups:
 4. 2
 5. [Enter]
 
-#login as `st`
+# login as `st`
 Prepare two directories: one is of size of 1MB, and the other is of size of 18MB
 
 ## Test: size is not beyond the limit
