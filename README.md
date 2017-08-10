@@ -48,18 +48,27 @@ Follow the instructions. It will create designated directory where students subm
 
 **Note**:
 
-The PI can also enforce deadlines by simply change the permission of the subdirectories or rename the subdirectories at the deadline. Use `at` command the following commands:
+The PI can also enforce deadline by simply changing the permission of the submission directory or renaming the submission directory at the deadline. One way is to use `at` command following the steps below:
 
+Step 1: use `at' command to specify the deadline: 
 
+```
+at [TIME]
+```
 
-Where TIME is formatted HH:MM AM/PM MM/DD/YY
-For example: 2:30 PM 10/21/2014
-After running this command, run:
+Where TIME is formatted HH:MM AM/PM MM/DD/YY. For example: 
+
+```
+at 2:30 PM 10/21/2018
+```
+
+Step 2: after running this command, run:
 
 ```sh
 $ chmod 700 [DIRECTORY]
 ``` 
-Where `DIRECTORY` is the assignment folder to be closed off Finally enter [ctrl+D] to submit this command.
+
+Where `DIRECTORY` is the assignment folder to be closed off Finally enter [ctrl+D] to submit this command. Then the permission of `DIRECTORY` will be changed to **700** at 2:30PM, Oct 21, 2018. After that, student will get an error message when he/she tries to submit assignment to this directory.  
 
 ## Usage for Students
 
