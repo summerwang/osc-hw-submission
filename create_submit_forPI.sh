@@ -12,8 +12,15 @@ if [[ -f /fs/scratch/xwang/bin/submit.C ]]; then
  rm /fs/scratch/xwang/bin/submit.C
 fi
 
+if [[ ! -d /fs/scratch/xwang/bin ]]; then
+ mkdir /fs/scratch/xwang/bin
+fi
+
+chmod -R 755 /fs/scratch/xwang/bin
 cd /fs/scratch/xwang/submit_hw
 gcc -o submit_prepare homework_submission.C
 mv submit_prepare /fs/scratch/xwang/bin
 cp submit.C /fs/scratch/xwang/bin
+chmod 755 /fs/scratch/xwang/bin/submit_prepare
+chmod 644 /fs/scratch/xwang/bin/submit.C
 
