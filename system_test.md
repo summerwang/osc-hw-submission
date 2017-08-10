@@ -256,4 +256,5 @@ No submissions
 ### Results seen by `st`:
 new does not exist. Please enter a valid path. Exit. 
 
-
+# Tests as others (login as `other`)
+When run `CSE01/submit`, get the message: "Permission denied"
