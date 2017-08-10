@@ -230,6 +230,10 @@ course=`echo $course_input | tr [a-z] [A-Z]`
 
 echo "Enter the name of assignment and press [ENTER]"
 read -p ">>>" assignment_input
+if [[ -z "$assignment_input" ]]; then
+ echo "Assignment name is empty. Exit"
+ exit
+fi
 assignment=`echo $assignment_input | tr [A-Z] [a-z]`
 DESTINATION="$path/$course/Submissions/$assignment"
 while [ -d "$DESTINATION" ]
