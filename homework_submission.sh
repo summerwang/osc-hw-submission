@@ -137,6 +137,10 @@ echo ""
 PATH_SDEFAULT="\$(pwd)"
 echo "Enter the name of assignment and press [ENTER]"
 read -p ">>>" assignment_input
+if [[ -z "\$assignment_input" ]]; then
+ echo "Assignment name is empty. Exit"
+ exit
+fi
 assignment_s="\$(echo \$assignment_input | tr [A-Z] [a-z])"
 DESTINATION="$path/$course/Submissions/\$assignment_s"
 CLONE="\$DESTINATION/\$USER"
