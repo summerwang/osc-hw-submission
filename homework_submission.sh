@@ -38,7 +38,11 @@ else
      chmod 1711 $SUBMISSION_FOLDER 
      chmod 1731 $DESTINATION
      if [[ $ta_account != $PROF ]]; then
-      setfacl -R -m u:$ta_account:rx $DESTINATION
+	IFS=','
+	for ta_name in $ta_account; do
+         echo $ta_name
+         setfacl -R -m u:$ta_name:rx $DESTINATION
+        done
      fi
      while [[ $SUBMISSION_FOLDER != "/" ]] 
      do
@@ -264,7 +268,7 @@ done
 echo "Do you have a TA and want to provide your TA the access to the files, too [y/n]?"
 read -p ">>>" reply_ta
 if [[ $reply_ta = 'y' ]]; then
- echo "Please provide your TA's OSC HPC account"
+ echo "Please provide your TA's OSC HPC account. Use comma ',' as separeation if you have multiple TAs"
  read -p ">>>" ta_account
 else
  ta_account=$PROF
