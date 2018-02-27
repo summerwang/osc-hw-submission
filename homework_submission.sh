@@ -40,7 +40,7 @@ else
      if [[ $ta_account != $PROF ]]; then
 	IFS=','
 	for ta_name in $ta_account; do
-         echo $ta_name
+        # echo $ta_name
          setfacl -R -m u:$ta_name:rx $DESTINATION
         done
      fi
