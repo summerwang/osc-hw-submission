@@ -10,6 +10,7 @@ touch $student/HW1/file1.txt
 $PWD/$professor
 cse01
 lab1
+n
 1
 n
 _P_EOF_
