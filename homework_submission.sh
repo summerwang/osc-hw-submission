@@ -37,6 +37,9 @@ else
      chmod 1711 $COURSE_FOLDER
      chmod 1711 $SUBMISSION_FOLDER 
      chmod 1731 $DESTINATION
+     if [[ $ta_account != $PROF ]]; then
+      setfacl -R -m u:$ta_account:rx $DESTINATION
+     fi
      while [[ $SUBMISSION_FOLDER != "/" ]] 
      do
        check_p=`ls -ld $SUBMISSION_FOLDER | awk '{print $3}'`
@@ -92,7 +95,7 @@ CLONE="\$DESTINATION/\$USER"
 EMAIL_S="\$(finger \$USER |grep Mail | awk '{print \$4}')"
 Permission="\$(ls -ld \$DESTINATION | awk '{print \$1}')"
 
-if [[ \$Permission = 'drwx-wx--t' ]]; then
+if [[ \$Permission = 'drwx-wx--t' ]] || [[ \$Permission = 'drwxrwx--t+' ]]; then
  if [[ !( -f "\$DESTINATION/submit_log_\$USER.txt") ]]; then
  touch \$DESTINATION/submit_log_\$USER.txt
  fi
@@ -213,8 +216,8 @@ echo "Hello, "$PROF".  This script will
 2. Create a designated directory where students submit their assignment"
 echo " "
 
-echo "Enter the absolute path where the submission direcotry will be created. 
-The submission direcotry will be created within the current directory if you simply press [ENTER]"
+echo "Enter the absolute path in /fs/project where the submission direcotry will be created. 
+The submission direcotry will be created within the directory $PATH_DEFAULT if you simply press [ENTER]"
 read -p ">>>" path
 if [[ -z "$path" ]]; then
  path=$PATH_DEFAULT
@@ -222,6 +225,10 @@ fi
 if [[ !(-d "$path") ]]; then
  echo "$path does not exist. Please enter a valid path. Exit"
  exit 
+fi
+if [[ $path != *"/fs/project"* ]]; then
+ echo "$path is not in /fs/project.Please use the project space allocated to your classroom project. Exit"
+ exit
 fi
 echo " "
 
@@ -254,6 +261,16 @@ while [ -d "$DESTINATION" ]
   DESTINATION="$path/$course/Submissions/$assignment"
 done
 
+echo "Do you have a TA and want to provide your TA the access to the files, too [y/n]?"
+read -p ">>>" reply_ta
+if [[ $reply_ta = 'y' ]]; then
+ echo "Please provide your TA's OSC HPC account"
+ read -p ">>>" ta_account
+else
+ ta_account=$PROF
+fi
+echo ""
+
 
 echo "Enter the size limit of one assignment submitted by each student, in MB (megabyte). Integer only.
 The size limit of one assignment submitted by each student is $SIZE_DEFAULT MB if you simply press [ENTER]"
@@ -280,5 +297,5 @@ else
 fi
 echo ""
 
-create_directory $path $assignment
-create_submit $path $course $assignment $size $reply_email
+create_directory $path $assignment $ta_account
+create_submit $path $course $assignment $size $reply_email 
