@@ -8,15 +8,17 @@ It is used by professor to
 
 Run `create_submit_forPI.sh` to create `/fs/scratch/xwang/bin/submit_prepare` and `/fs/scratch/xwang/bin/submit.C` as:
 
-```sh
+```console
 $ /fs/scratch/xwang/submit_hw/create_submit_forPI.sh
+...
 ```
 
 You can take a quick look at ```create_submit_forPI.sh```:
 
-```sh
+```console
 $ cd /fs/scratch/xwang/submit_hw
 $ cat create_submit_forPI.sh
+...
 ```
 
 Notice it calls within the script the following scripts: `homework_submission.C`,
