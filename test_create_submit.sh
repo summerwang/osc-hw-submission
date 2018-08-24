@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd /fs/project/PZS0712/xwang
+pro_path=/fs/project/PZS0712/xwang
+cd $pro_path
 professor=`mktemp -d professor.XXXXXXXX`
 student=`mktemp -d student.XXXXXXXX`
 
@@ -8,7 +9,7 @@ mkdir $student/HW1
 touch $student/HW1/file1.txt
 #
 /fs/scratch/xwang/bin/submit_prepare << _P_EOF_
-/fs/project/PZS0712/xwang/$professor
+$pro_path/$professor
 cse01
 lab1
 n
