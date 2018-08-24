@@ -38,6 +38,7 @@ It also includes a smoke test script named `test_create_submit.sh` in `/fs/scrat
 $ /fs/scratch/xwang/submit_hw/test_create_submit.sh
 ```
 No error output if all basic tests pass. 
+
 Note: the smoke test uses pro_path=/fs/project/PZS0712/xwang. Staff needs to reset pro_path before the test. 
 
 ## Usage for Professor
