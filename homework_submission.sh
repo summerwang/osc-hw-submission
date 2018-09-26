@@ -35,7 +35,7 @@ else
  mkdir -p $DESTINATION
  classcode=`echo $path | awk -F '/' '{print $4}'`
  accounts=`groups $USER | awk -F " " '{for(i=1;i<=NF;i++) {if ($i~/^P/){print $i}}}' | wc -l `
- #echo $accounts
+ # echo $accounts
  if  [[ $accounts > 1 ]]; then
  chgrp $classcode $DESTINATION
  fi 
