@@ -33,6 +33,13 @@ if [ -d "$DESTINATION" ]; then
  exit
 else
  mkdir -p $DESTINATION
+ classcode=`echo $path | awk -F '/' '{print $4}'`
+ accounts=`groups $USER | awk -F " " '{for(i=1;i<=NF;i++) {if ($i~/^P/){print $i}}}' | wc -l `
+ #echo $accounts
+ if  [[ $accounts > 1 ]]; then
+ chgrp $classcode $DESTINATION
+ fi 
+# echo $classcode
    if [ -d "$DESTINATION" ]; then
      chmod 1711 $COURSE_FOLDER
      chmod 1711 $SUBMISSION_FOLDER 
@@ -48,6 +55,9 @@ else
      do
        check_p=`ls -ld $SUBMISSION_FOLDER | awk '{print $3}'`
        if [[ ($check_p = $USER) ]]; then
+          if  [[ $accounts > 1 ]]; then
+           chgrp $classcode $SUBMISSION_FOLDER
+          fi
         chmod g+x $SUBMISSION_FOLDER
        fi
        SUBMISSION_FOLDER=$(dirname $SUBMISSION_FOLDER)
@@ -68,7 +78,8 @@ fi
 create_submit()
 {
 SUBMISSION_FOLDER="$path/$course/Submissions"
-
+classcode=`echo $path | awk -F '/' '{print $4}'`
+accounts=`groups $USER | awk -F " " '{for(i=1;i<=NF;i++) {if ($i~/^P/){print $i}}}' | wc -l `
 cd $SUBMISSION_FOLDER
 
 if [[ -f "submit.sh" ]]; then
@@ -98,18 +109,25 @@ DESTINATION="$path/$course/Submissions/\$assignment_s"
 CLONE="\$DESTINATION/\$USER"
 EMAIL_S="\$(finger \$USER |grep Mail | awk '{print \$4}')"
 Permission="\$(ls -ld \$DESTINATION | awk '{print \$1}')"
+classcode=`echo $path | awk -F '/' '{print \$4}'`
+accounts=`groups \$USER | awk -F " " '{for(i=1;i<=NF;i++) {if ($i~/^P/){print $i}}}' | wc -l `
 
 if [[ \$Permission = 'drwx-wx--t' ]] || [[ \$Permission = 'drwxrwx--t+' ]]; then
  if [[ !( -f "\$DESTINATION/submit_log_\$USER.txt") ]]; then
  touch \$DESTINATION/submit_log_\$USER.txt
  fi
  chmod 750 \$DESTINATION/submit_log_\$USER.txt
-
+ if  [[ $accounts > 1 ]]; then
+  chgrp \$classcode \$DESTINATION/submit_log_\$USER.txt
+ fi
  if [ -d "\$CLONE" ]; then
      rm -R "\$CLONE"
  fi
  cp -R "\$submit_path" "\$CLONE"
  chmod -R 770 \$CLONE
+ if  [[ $accounts > 1 ]]; then
+  chgrp -R \$classcode \$CLONE
+ fi
  chmod -R 700 \$submit_path
  Submit_time=\$(date)
   if [ -d "\$CLONE" ]; then 
@@ -125,7 +143,10 @@ if [[ \$Permission = 'drwx-wx--t' ]] || [[ \$Permission = 'drwxrwx--t+' ]]; then
    echo "Your assignment \$assignment_s is NOT submitted at \$Submit_time" >>\$DESTINATION/submit_log_\$USER.txt
   fi
  cp \$DESTINATION/submit_log_\$USER.txt \$submit_path
- chmod u-w \$DESTINATION/submit_log_\$USER.txt  
+ chmod u-w \$DESTINATION/submit_log_\$USER.txt
+ if  [[ $accounts > 1 ]]; then
+  chgrp \$classcode \$DESTINATION/submit_log_\$USER.txt
+ fi  
 else
   echo "You may pass the deadline and can't submit your assignment \$assignment_s. Please check with your professor"
   exit
@@ -199,11 +220,17 @@ submit_homework \$assignment_s \$submit_path
 EOF
 fi
 chmod 750 submit.sh
+if  [[ $accounts > 1 ]]; then
+ chgrp $classcode submit.sh
+fi
 cp /fs/scratch/xwang/bin/submit.C $path/$course/Submissions
 newline=system\(\"$path/$course/Submissions/submit.sh\"\)\;
 sed -i "/system/c $newline" submit.C
 gcc -o submit submit.C
 chmod 750 submit
+if  [[ $accounts > 1 ]]; then
+ chgrp $classcode submit
+fi
 rm submit.C
 mv submit $path/$course
 echo "submit has been generated successfully"
