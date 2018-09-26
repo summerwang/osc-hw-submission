@@ -17,7 +17,7 @@ if [[ ! -d /fs/scratch/xwang/bin ]]; then
 fi
 
 chmod -R 755 /fs/scratch/xwang/bin
-cd /fs/scratch/xwang/submit_hw
+cd /fs/scratch/xwang/osc-hw-submission
 gcc -o submit_prepare homework_submission.C
 mv submit_prepare /fs/scratch/xwang/bin
 cp submit.C /fs/scratch/xwang/bin
