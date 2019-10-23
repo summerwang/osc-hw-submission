@@ -9,8 +9,8 @@
 ###############################################################################
 
 #Get name of email of the PI
-PROF=`finger $USER |grep Name | awk '{$1=$2=$3="";print}'`
-EMAIL=`finger $USER |grep Mail | awk '{print $4}'`
+PROF=`OSCfinger $USER |grep Name | awk '{$1=$2=$3="";print}'`
+EMAIL=`OSCfinger $USER |grep E-mail | awk '{print $2}'`
 # Default size limit of one homework submitted by each student, 1000 MB
 SIZE_DEFAULT=1000
 #Default path where submission directory is created. For now, use the current directory where the script runs. 
@@ -107,7 +107,7 @@ submit_homework()
 {
 DESTINATION="$path/$course/Submissions/\$assignment_s"
 CLONE="\$DESTINATION/\$USER"
-EMAIL_S="\$(finger \$USER |grep Mail | awk '{print \$4}')"
+EMAIL_S="\$(OSCfinger \$USER |grep E-mail | awk '{print \$2}')"
 Permission="\$(ls -ld \$DESTINATION | awk '{print \$1}')"
 classcode=`echo $path | awk -F '/' '{print \$4}'`
 accounts=`groups \$USER | awk -F " " '{for(i=1;i<=NF;i++) {if ($i~/^P/){print $i}}}' | wc -l `
